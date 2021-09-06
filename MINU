@@ -1,0 +1,30 @@
+library(MASS)
+makeChacheMatrix<-function(manu=matrix()){
+  inv<- NULL
+  set<-function(minu){
+    manu<<-minu
+    inv<<-NULL
+  }
+  get<-function()manu
+  setinv<-function(inverse)inv<<-inverse
+  getinv<-function(){
+    inver<-ginv(manu)
+    inver%*%manu
+  }
+  list(set=set,get=get,setinv=setinv,getinv=getinv)
+}
+
+cacheSolve<-function(manu,...)
+{
+  inv<-manu$getinv()
+  if(!is.null(inv))
+  {
+    message("getting cached data!")
+    return(inv)
+  }
+  data<-manu$get()
+  inv<-solve(data,...)
+  manu$setinv(inv)
+  inv
+}
+
